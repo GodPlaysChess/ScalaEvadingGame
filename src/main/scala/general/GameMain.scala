@@ -5,6 +5,7 @@ import objects.{GameObject, Square, Circle}
 import org.lwjgl.input.Keyboard
 import org.lwjgl.{Sys, LWJGLException}
 
+// http://fabiensanglard.net/Prototyp/ check this out
 object GameMain {
 
   def main(args: Array[String]) {
@@ -30,6 +31,7 @@ object GameMain {
 
   private def runLoop() = {
     while (!Display.isCloseRequested) {
+
       readInput()
       updateObjects()
       updateScreen()

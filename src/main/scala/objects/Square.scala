@@ -11,7 +11,9 @@ class Square(pos: Vec) extends GameObject(pos) {
   def this(x1: Double, y1: Double) = this(new Vec(x1, y1))
 
   override def draw() = {
+    glColor3f(0.1f, 1f, 0.1f)
     glPushMatrix()
+
     //  glTranslated(x, y, 0)
     //  glRotatef(rotation, 0f, 0f, 1f)
     //  glTranslated(-x, -y, 0)
@@ -30,7 +32,7 @@ class Square(pos: Vec) extends GameObject(pos) {
   override def updatePosition(delta: Int, border: Pair[Double, Double]) = {
     position += new Vec(speed, 0)
     correctAccordingScreenBorder(border)
-    println(position)
+    //println(position)
   }
 
 
