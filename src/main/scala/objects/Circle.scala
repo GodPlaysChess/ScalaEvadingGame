@@ -35,13 +35,14 @@ class Circle(pos: Vec) extends GameObject(pos){
     glPopMatrix()
   }
 
-  def updatePosition(delta: Int) {
+  def updatePosition(delta: Int, border: Pair[Double, Double]) {
     // rotate quad
-    //rotation += 0.15f * delta
+    // rotation += 0.15f * delta
     position -= new Vec(
       moveHorizontally(InputTracker.leftHold, InputTracker.rightHold),
-        moveVertically(InputTracker.downHold, InputTracker.upHold)
-      ) * delta
+      moveVertically(InputTracker.downHold, InputTracker.upHold)
+    )
+    correctAccordingScreenBorder(border)
 
     /*if (Keyboard.isKeyDown(Keyboard.KEY_LEFT)) x -= speed * delta
     if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) x += speed * delta

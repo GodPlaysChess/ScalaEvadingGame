@@ -27,6 +27,11 @@ class Square(pos: Vec) extends GameObject(pos) {
 
   }
 
-  def updatePosition(delta: Int) = position += new Vec(speed * delta, 0)
+  override def updatePosition(delta: Int, border: Pair[Double, Double]) = {
+    position += new Vec(speed, 0)
+    correctAccordingScreenBorder(border)
+    println(position)
+  }
+
 
 }

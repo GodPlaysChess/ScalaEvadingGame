@@ -1,16 +1,17 @@
 package general
 
+import org.lwjgl.opengl.{GL11, DisplayMode, Display}
 import objects.{GameObject, Square, Circle}
 import org.lwjgl.input.Keyboard
 import org.lwjgl.{Sys, LWJGLException}
-import org.lwjgl.opengl.{GL11, DisplayMode, Display}
 
 object GameMain {
 
   def main(args: Array[String]) {
     GameMain.start()
   }
-
+  val screenSizeX: Int = 800
+  val screenSizeY: Int = 600
   var lastFrame = -1l
   var fps = 0
   var lastFPS = -1l
@@ -67,9 +68,10 @@ object GameMain {
     for (obj <- allObjects) obj.draw()
   }
 
+
   private def createDisplay() {
     try {
-      Display.setDisplayMode(new DisplayMode(800, 600))
+      Display.setDisplayMode(new DisplayMode(screenSizeX, screenSizeY))
       Display.create()
     } catch {
       case e: LWJGLException => e.printStackTrace()
@@ -89,7 +91,8 @@ object GameMain {
   }
 
   private def updateObjects() = {
-    for (obj <- allObjects) obj.updatePosition(getDelta)
+    for (obj <- allObjects) obj.updatePosition(getDelta, (screenSizeX, screenSizeY))
+//    println("delta= " + getDelta)
   }
 
   def readInput() = InputTracker.track()

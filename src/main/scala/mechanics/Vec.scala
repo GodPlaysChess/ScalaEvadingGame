@@ -18,5 +18,6 @@ final class Vec(val x: Double, val y: Double) {
 
   def normal = new Vec(x / length, y / length)
 
+  override def toString = "( " + x + " , " + y + " )"
 
 }
