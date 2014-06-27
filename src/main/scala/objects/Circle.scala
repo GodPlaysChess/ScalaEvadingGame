@@ -1,19 +1,22 @@
 package objects
 
-import org.lwjgl.input.Keyboard
+import general.InputTracker
+import mechanics.Vec
 import org.lwjgl.opengl.GL11._
 
-class Circle(var x: Double, var y: Double) {
-  def moveDown() = y -= 1
-
-  def moveUp() = y += 1
+class Circle(pos: Vec) extends GameObject(pos){
+  def this(x1: Double, y1: Double) = this(new Vec(x1, y1))
 
   val radius = 50
+  val MAX_SPEED = 5.0
+  val TIME_TO_MAX_ACCELERATION: Int = 5000
 
-  def moveLeft() = x -= 1
+  def calculateSpeed(time: Long) =
+    if (math.abs(time) > TIME_TO_MAX_ACCELERATION) MAX_SPEED else MAX_SPEED * time / 3000
 
-  def moveRight() = x += 1
 
+  def moveHorizontally(timeLeft: Long, timeRight: Long) = calculateSpeed(timeLeft - timeRight)
+  def moveVertically(timeDown: Long, timeUp: Long) = calculateSpeed(timeDown - timeUp)
 
   def draw() = {
     glPushMatrix()
@@ -32,37 +35,27 @@ class Circle(var x: Double, var y: Double) {
     glPopMatrix()
   }
 
-  def update(delta: Int) {
+  def updatePosition(delta: Int) {
     // rotate quad
     //rotation += 0.15f * delta
+    position -= new Vec(
+      moveHorizontally(InputTracker.leftHold, InputTracker.rightHold),
+        moveVertically(InputTracker.downHold, InputTracker.upHold)
+      ) * delta
 
-    if (Keyboard.isKeyDown(Keyboard.KEY_LEFT)) x -= 0.35f * delta
-    if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) x += 0.35f * delta
+    /*if (Keyboard.isKeyDown(Keyboard.KEY_LEFT)) x -= speed * delta
+    if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) x += speed * delta
 
-    if (Keyboard.isKeyDown(Keyboard.KEY_UP)) y -= 0.35f * delta
-    if (Keyboard.isKeyDown(Keyboard.KEY_DOWN)) y += 0.35f * delta
+    if (Keyboard.isKeyDown(Keyboard.KEY_DOWN)) y -= speed * delta
+    if (Keyboard.isKeyDown(Keyboard.KEY_UP)) y += speed * delta
+*/
 
-    if (x < 0) x = 0
-    if (x > 800) x = 800
-    if (y < 0) y = 0
-    if (y > 600) y = 600
   }
 
-  def drawQuad() = {
-    // draw quad
-    glPushMatrix()
-    //  glTranslated(x, y, 0)
-    //glRotatef(rotation, 0f, 0f, 1f)
-    //  glTranslated(-x, -y, 0)
-
-    glBegin(GL_QUADS)
-    glVertex2d(x - 50, y - 50)
-    glVertex2d(x + 50, y - 50)
-    glVertex2d(x + 50, y + 50)
-    glVertex2d(x - 50, y + 50)
-    glEnd()
-    glPopMatrix()
-  }
 
 
 }
+/*  def moveLeft(time: Long) = x -= calculateSpeed(time)
+  def moveRight(time: Long) = x += calculateSpeed(time)
+  def moveDown(time: Long) = y -= calculateSpeed(time)
+  def moveUp(time: Long) = y += calculateSpeed(time)*/

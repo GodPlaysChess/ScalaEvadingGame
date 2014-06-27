@@ -1,20 +1,23 @@
 package general
 
-import objects.Circle
+import objects.{GameObject, Square, Circle}
 import org.lwjgl.input.Keyboard
 import org.lwjgl.{Sys, LWJGLException}
 import org.lwjgl.opengl.{GL11, DisplayMode, Display}
 
-object TimerExample {
+object GameMain {
 
   def main(args: Array[String]) {
-    TimerExample.start()
+    GameMain.start()
   }
 
   var lastFrame = -1l
   var fps = 0
   var lastFPS = -1l
+  val FPS_CAP = 100
   val circle = new Circle(50, 50)
+  val square = new Square(100, 100)
+  val allObjects: List[GameObject] = List(circle, square)
 
   def start() {
     createDisplay()
@@ -26,6 +29,7 @@ object TimerExample {
 
   private def runLoop() = {
     while (!Display.isCloseRequested) {
+      readInput()
       updateObjects()
       updateScreen()
     }
@@ -55,12 +59,12 @@ object TimerExample {
     drawObjects()
     updateTitleToFps()
     Display.update()
-    Display.sync(60) // cap fps to 60
+    Display.sync(FPS_CAP)
   }
 
   private def drawObjects() = {
     GL11.glColor3f(0.5f, 0.5f, 1.0f)
-    circle.draw()
+    for (obj <- allObjects) obj.draw()
   }
 
   private def createDisplay() {
@@ -84,16 +88,9 @@ object TimerExample {
     lastFPS = getTime // initialise fps timer
   }
 
-  private def updateMovement() = {
-    if (Keyboard.isKeyDown(Keyboard.KEY_LEFT)) circle.moveLeft()
-    if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) circle.moveRight()
-    if (Keyboard.isKeyDown(Keyboard.KEY_DOWN)) circle.moveDown()
-    if (Keyboard.isKeyDown(Keyboard.KEY_UP)) circle.moveUp()
-  }
-
   private def updateObjects() = {
-    updateMovement()
+    for (obj <- allObjects) obj.updatePosition(getDelta)
   }
 
-
+  def readInput() = InputTracker.track()
 }
