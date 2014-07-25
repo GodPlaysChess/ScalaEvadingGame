@@ -11,15 +11,17 @@ object GameMain {
   def main(args: Array[String]) {
     GameMain.start()
   }
-  val screenSizeX: Int = 800
-  val screenSizeY: Int = 600
+   
   var lastFrame = -1l
   var fps = 0
   var lastFPS = -1l
   val FPS_CAP = 100
   val circle = new Circle(50, 50)
   val square = new Square(100, 100)
-  val allObjects: List[GameObject] = List(circle, square)
+  val screen = new graphics.Screen
+  screen.enemies.add(circle)
+  screen.frontground.add(square)
+  
 
   def start() {
     createDisplay()
@@ -32,11 +34,25 @@ object GameMain {
   private def runLoop() = {
     while (!Display.isCloseRequested) {
 
+      // tick()
+      // updateEntities()
+      // check collisions()
+      // render()
+
       readInput()
       updateObjects()
+      checkCollisions()
       updateScreen()
     }
   }
+
+  def readInput() = InputTracker.simpleTrack()
+
+  private def updateObjects() = {
+    screen.update(getDelta) // keep one of these
+  }
+
+  def checkCollisions() = ???
 
   // Calculate how many milliseconds have passed since last frame
   private def getDelta: Int = {
@@ -67,13 +83,13 @@ object GameMain {
 
   private def drawObjects() = {
     GL11.glColor3f(0.5f, 0.5f, 1.0f)
-    for (obj <- allObjects) obj.draw()
+    screen.drawAll()
   }
 
 
   private def createDisplay() {
     try {
-      Display.setDisplayMode(new DisplayMode(screenSizeX, screenSizeY))
+      Display.setDisplayMode(new DisplayMode(screen.length, screen.width))
       Display.create()
     } catch {
       case e: LWJGLException => e.printStackTrace()
@@ -92,10 +108,4 @@ object GameMain {
     lastFPS = getTime // initialise fps timer
   }
 
-  private def updateObjects() = {
-    for (obj <- allObjects) obj.updatePosition(getDelta, (screenSizeX, screenSizeY))
-//    println("delta= " + getDelta)
-  }
-
-  def readInput() = InputTracker.track()
 }

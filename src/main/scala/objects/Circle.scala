@@ -9,14 +9,11 @@ class Circle(pos: Vec) extends GameObject(pos) {
 
   val radius = 20
   val MAX_SPEED = 20.0
+  val speed = 1
   val TIME_TO_MAX_ACCELERATION: Int = 1000
 
   def calculateSpeed(time: Long) =
     if (math.abs(time) > TIME_TO_MAX_ACCELERATION) MAX_SPEED else MAX_SPEED * time / TIME_TO_MAX_ACCELERATION
-
-  def moveHorizontally(timeLeft: Long, timeRight: Long) = calculateSpeed(timeLeft - timeRight)
-
-  def moveVertically(timeDown: Long, timeUp: Long) = calculateSpeed(timeDown - timeUp)
 
   def draw() = {
     glPushMatrix()
@@ -35,12 +32,15 @@ class Circle(pos: Vec) extends GameObject(pos) {
     glPopMatrix()
   }
 
-  def updatePosition(delta: Int, border: Pair[Double, Double]) {
-    position -= new Vec(
-      moveHorizontally(InputTracker.leftHold, InputTracker.rightHold),
-      moveVertically(InputTracker.downHold, InputTracker.upHold)
-    )
+  def update(delta: Int, border: (Double, Double)) {
+    var horizontalShift, verticalShift = 0
+    if (InputTracker.leftPressed) horizontalShift += speed
+    if (InputTracker.rightPressed) horizontalShift -= speed
+    if (InputTracker.downPressed) verticalShift += speed
+    if (InputTracker.upPressed) verticalShift -= speed
+    position -= new Vec(horizontalShift * delta, verticalShift * delta)
     correctAccordingScreenBorder(border)
   }
 
+  override def size: Double = radius
 }

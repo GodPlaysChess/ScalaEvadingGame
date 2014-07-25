@@ -18,6 +18,8 @@ final class Vec(val x: Double, val y: Double) {
 
   def normal = new Vec(x / length, y / length)
 
+  def distance(other: Vec) = math.hypot(x - other.x, y-other.y)
+
   override def toString = "( " + x + " , " + y + " )"
 
 }
