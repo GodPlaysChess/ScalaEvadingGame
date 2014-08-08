@@ -11,7 +11,8 @@ class Layer {
 
   def render() = for (entity <- entities) entity.draw()
 
-  def update(delta: Int, dimensions: (Double, Double)) = for (entity <- entities) entity.update(delta, dimensions)
+  def update(delta: Double, dimensions: (Double, Double)) = for (entity <- entities) entity.update(delta, dimensions)
 
+  override def toString = entities.toString()
 
 }

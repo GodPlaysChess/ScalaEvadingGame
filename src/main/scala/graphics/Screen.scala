@@ -15,7 +15,7 @@ class Screen {
 
   val layers = List(backGround, bullets, enemies, bonus, fx, frontground, text)
 
-  def update(delta: Int) = {
+  def update(delta: Double) = {
     for (layer <- layers) layer.update(delta, (length, width))
   }
 

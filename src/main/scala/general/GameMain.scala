@@ -1,9 +1,9 @@
 package general
 
-import org.lwjgl.opengl.{GL11, DisplayMode, Display}
-import objects.{GameObject, Square, Circle}
-import org.lwjgl.input.Keyboard
-import org.lwjgl.{Sys, LWJGLException}
+import mechanics.CollisionDetector
+import objects.{Circle, Square}
+import org.lwjgl.opengl.{Display, DisplayMode, GL11}
+import org.lwjgl.{LWJGLException, Sys}
 
 // http://fabiensanglard.net/Prototyp/ check this out
 object GameMain {
@@ -11,34 +11,36 @@ object GameMain {
   def main(args: Array[String]) {
     GameMain.start()
   }
-   
-  var lastFrame = -1l
-  var fps = 0
-  var lastFPS = -1l
-  val FPS_CAP = 100
-  val circle = new Circle(50, 50)
-  val square = new Square(100, 100)
-  val screen = new graphics.Screen
-  screen.enemies.add(circle)
-  screen.frontground.add(square)
-  
+
+  private var lastFrame = -1l
+  private var fps = 0
+  private var lastFPS = -1l
+  private val screen = new graphics.Screen
+  private val FPS_CAP = 100
+
+  private val collisionDetector = new CollisionDetector
 
   def start() {
     createDisplay()
     initializeGL()
     initializeFpsTimer()
+    initializeInitialDisposition()
     runLoop()
     Display.destroy()
   }
 
+  def initializeInitialDisposition() = {
+    val circle = new Circle(50, 50)
+    val square = new Square(100, 100)
+    screen.enemies.add(circle)
+    screen.enemies.add(square)
+    screen.enemies.add(new Square())
+
+    println(screen.enemies)
+  }
+
   private def runLoop() = {
     while (!Display.isCloseRequested) {
-
-      // tick()
-      // updateEntities()
-      // check collisions()
-      // render()
-
       readInput()
       updateObjects()
       checkCollisions()
@@ -49,17 +51,17 @@ object GameMain {
   def readInput() = InputTracker.simpleTrack()
 
   private def updateObjects() = {
-    screen.update(getDelta) // keep one of these
+    screen.update(getDelta)
   }
 
-  def checkCollisions() = ???
+  private def checkCollisions() = screen.layers.foreach(collisionDetector.check)
 
   // Calculate how many milliseconds have passed since last frame
-  private def getDelta: Int = {
+  private def getDelta: Double = {
     val time = getTime
     val delta = time - lastFrame
     lastFrame = time
-    delta.asInstanceOf[Int]
+    delta
   }
 
   private def getTime: Long = Sys.getTime * 1000 / Sys.getTimerResolution

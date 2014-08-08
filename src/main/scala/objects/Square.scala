@@ -3,12 +3,15 @@ package objects
 import mechanics.Vec
 import org.lwjgl.opengl.GL11._
 
+import scala.util.Random
+
 class Square(pos: Vec) extends GameObject(pos) {
 
-
-  val speed = 1
+  private val speed = 0.1
 
   def this(x1: Double, y1: Double) = this(new Vec(x1, y1))
+
+  def this() = this(Random.nextInt(1000), Random.nextInt(1000))
 
   override def draw() = {
     glColor3f(0.1f, 1f, 0.1f)
@@ -23,11 +26,16 @@ class Square(pos: Vec) extends GameObject(pos) {
 
   }
 
-  override def update(delta: Int, border: (Double, Double)) = {
-    position += new Vec(speed * delta, 0)
+  override def update(delta: Double, border: (Double, Double)) = {
+    position += Vec(speed * delta, 0)
     correctAccordingScreenBorder(border)
     //println(position)
   }
 
   override def size: Double = 10
+
+  override def collide(target: GameObject): Unit = {
+    //not implemented yet
+  }
+
 }
