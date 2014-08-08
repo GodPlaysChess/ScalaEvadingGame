@@ -4,8 +4,6 @@ import mechanics.Vec
 
 abstract class GameObject(var position: Vec) {
 
-  //  if (position.x < 0) position = new Vec(0, y)
-  //  if (position.y < 0) position = new Vec(x, 0)
   def size: Double
 
   def draw(): Unit
@@ -13,8 +11,6 @@ abstract class GameObject(var position: Vec) {
   def update(delta: Double, dimensions: (Double, Double))
 
   def collide(target: GameObject)
-
-//  def this(x1: Double, y1: Double) = this(new Vec(x1, y1))
 
   protected def x = position.x
 
