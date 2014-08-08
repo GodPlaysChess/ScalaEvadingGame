@@ -20,7 +20,7 @@ final class Vec(val x: Double, val y: Double) {
 
   def distance(other: Vec) = math.hypot(x - other.x, y - other.y)
 
-  override def toString = "( " + x + " , " + y + " )"
+  override def toString = "[" + x + " , " + y + "]"
 
 }
 

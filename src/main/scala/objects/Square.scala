@@ -5,13 +5,13 @@ import org.lwjgl.opengl.GL11._
 
 import scala.util.Random
 
-class Square(pos: Vec) extends GameObject(pos) {
+class Square(pos: Vec, speed: Double) extends GameObject(pos) {
 
-  private val speed = 0.1
-
-  def this(x1: Double, y1: Double) = this(new Vec(x1, y1))
+  def this(x1: Double, y1: Double) = this(new Vec(x1, y1), 0.1)
 
   def this() = this(Random.nextInt(1000), Random.nextInt(1000))
+
+  def this(speed: Double) = this(new Vec(Random.nextInt(1000), Random.nextInt(1000)), speed)
 
   override def draw() = {
     glColor3f(0.1f, 1f, 0.1f)
@@ -29,7 +29,6 @@ class Square(pos: Vec) extends GameObject(pos) {
   override def update(delta: Double, border: (Double, Double)) = {
     position += Vec(speed * delta, 0)
     correctAccordingScreenBorder(border)
-    //println(position)
   }
 
   override def size: Double = 10

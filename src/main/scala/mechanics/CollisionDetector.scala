@@ -3,10 +3,13 @@ package mechanics
 import graphics.Layer
 import objects.GameObject
 
+import scala.collection.mutable.ArrayBuffer
+
 class CollisionDetector {
 
-  def check(layer: Layer) = {
-    layer.entities.combinations(2).foreach(x => checkCollision(x(0), x(1)))
+  def check(layers: Layer*) = {
+    layers.foldLeft(new ArrayBuffer[GameObject])((acc, layer) => acc ++ layer.entities).
+      combinations(2).foreach(x => checkCollision(x(0), x(1)))
   }
 
   private def checkCollision(obj1: GameObject, obj2: GameObject) =

@@ -10,13 +10,9 @@ class Circle(pos: Vec) extends GameObject(pos) {
   private val radius = 20
   private var speed = 0.5
 
-//  private val MAX_SPEED = 20.0
-//  private val TIME_TO_MAX_ACCELERATION: Int = 1000
-
-//  def calculateSpeed(time: Long) =
-//    if (math.abs(time) > TIME_TO_MAX_ACCELERATION) MAX_SPEED else MAX_SPEED * time / TIME_TO_MAX_ACCELERATION
-
   override def draw() = {
+
+    glColor3f(0.5f, 0.5f, 0.9f)
     glPushMatrix()
     glTranslated(x, y, 0)
     glScalef(radius, radius, 1)

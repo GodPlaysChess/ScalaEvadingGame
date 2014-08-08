@@ -4,7 +4,6 @@ import mechanics.Vec
 
 abstract class GameObject(var position: Vec) {
 
-
   //  if (position.x < 0) position = new Vec(0, y)
   //  if (position.y < 0) position = new Vec(x, 0)
   def size: Double

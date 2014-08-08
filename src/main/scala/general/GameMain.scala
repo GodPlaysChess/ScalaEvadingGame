@@ -1,7 +1,7 @@
 package general
 
-import mechanics.CollisionDetector
-import objects.{Circle, Square}
+import mechanics.{Vec, CollisionDetector}
+import objects.{Score, Circle, Square}
 import org.lwjgl.opengl.{Display, DisplayMode, GL11}
 import org.lwjgl.{LWJGLException, Sys}
 
@@ -32,9 +32,13 @@ object GameMain {
   def initializeInitialDisposition() = {
     val circle = new Circle(50, 50)
     val square = new Square(100, 100)
-    screen.enemies.add(circle)
+    screen.foreground.add(circle)
     screen.enemies.add(square)
     screen.enemies.add(new Square())
+    screen.enemies.add(new Square(1))
+    screen.enemies.add(new Square(0.3))
+
+    screen.text.add(new Score(Vec(screen.length / 2, screen.width - 100)))
 
     println(screen.enemies)
   }
@@ -54,7 +58,7 @@ object GameMain {
     screen.update(getDelta)
   }
 
-  private def checkCollisions() = screen.layers.foreach(collisionDetector.check)
+  private def checkCollisions() = collisionDetector.check(screen.enemies, screen.bullets, screen.foreground)
 
   // Calculate how many milliseconds have passed since last frame
   private def getDelta: Double = {
