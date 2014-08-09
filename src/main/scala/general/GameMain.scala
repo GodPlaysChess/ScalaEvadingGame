@@ -105,7 +105,7 @@ object GameMain {
   private def initializeGL() {
     GL11.glMatrixMode(GL11.GL_PROJECTION)
     GL11.glLoadIdentity()
-    GL11.glOrtho(0, 800, 0, 600, 1, -1)
+    GL11.glOrtho(0, screen.length, screen.width, 0, 1, -1)
     GL11.glMatrixMode(GL11.GL_MODELVIEW)
   }
 

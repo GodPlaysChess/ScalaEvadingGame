@@ -11,7 +11,6 @@ class Circle(pos: Vec) extends GameObject(pos) {
   private var speed = 0.5
 
   override def draw() = {
-
     glColor3f(0.5f, 0.5f, 0.9f)
     glPushMatrix()
     glTranslated(x, y, 0)
@@ -20,7 +19,7 @@ class Circle(pos: Vec) extends GameObject(pos) {
     glBegin(GL_TRIANGLE_FAN)
     glVertex2d(0, 0)
 
-    for (i <- 0 to 50) { // i - number of circle edges
+    for (i <- 0 to 50) {
       val angle = Math.PI * 2 * i / 50
       glVertex2d(Math.cos(angle), Math.sin(angle))
     }
@@ -31,10 +30,10 @@ class Circle(pos: Vec) extends GameObject(pos) {
 
   override def update(delta: Double, border: (Double, Double)) {
     var horizontalShift, verticalShift = 0.0
-    if (InputTracker.leftPressed) horizontalShift += speed
-    if (InputTracker.rightPressed) horizontalShift -= speed
-    if (InputTracker.downPressed) verticalShift += speed
-    if (InputTracker.upPressed) verticalShift -= speed
+    if (InputTracker.isLeftPressed) horizontalShift += speed
+    if (InputTracker.isRightPressed) horizontalShift -= speed
+    if (InputTracker.isDownPressed) verticalShift -= speed
+    if (InputTracker.isUpPressed) verticalShift += speed
     position -= Vec(horizontalShift * delta, verticalShift * delta)
     correctAccordingScreenBorder(border)
   }
@@ -51,6 +50,4 @@ class Circle(pos: Vec) extends GameObject(pos) {
     speed = 0
     println("collide")
   }
-
-
 }

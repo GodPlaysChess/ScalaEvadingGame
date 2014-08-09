@@ -15,7 +15,6 @@ class Score(pos: Vec) extends GameObject(pos) {
   override def update(delta: Double, dimensions: (Double, Double)): Unit = correctAccordingScreenBorder(dimensions)
 
   override def draw(): Unit = {
-
     glEnable(GL_BLEND)
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
     font.drawString(pos.x, pos.y, "Score: ", Color.yellow)
