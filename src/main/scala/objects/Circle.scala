@@ -1,6 +1,7 @@
 package objects
 
 import general.InputTracker
+import graphics.Shapes
 import mechanics.Vec
 import org.lwjgl.opengl.GL11._
 
@@ -12,20 +13,7 @@ class Circle(pos: Vec) extends GameObject(pos) {
 
   override def draw() = {
     glColor3f(0.5f, 0.5f, 0.9f)
-    glPushMatrix()
-    glTranslated(x, y, 0)
-    glScalef(radius, radius, 1)
-
-    glBegin(GL_TRIANGLE_FAN)
-    glVertex2d(0, 0)
-
-    for (i <- 0 to 50) {
-      val angle = Math.PI * 2 * i / 50
-      glVertex2d(Math.cos(angle), Math.sin(angle))
-    }
-    glEnd()
-
-    glPopMatrix()
+    Shapes.drawCircle(x, y, radius)
   }
 
   override def update(delta: Double, border: (Double, Double)) {
@@ -35,19 +23,23 @@ class Circle(pos: Vec) extends GameObject(pos) {
     if (InputTracker.isDownPressed) verticalShift -= speed
     if (InputTracker.isUpPressed) verticalShift += speed
     position -= Vec(horizontalShift * delta, verticalShift * delta)
-    correctAccordingScreenBorder(border)
+    bounceCorrection(border)
   }
 
   override def size: Double = radius
 
+  def addScore(): Unit = ???
+
   override def collide(target: GameObject): Unit = target match {
     case _: Square => crash()
     case _: Circle => "will implement later"
+    case _: Coin => addScore()
     case _ => "thrown an exception"
   }
 
   def crash() = {
     speed = 0
+//    forRemove = true
     println("collide")
   }
 }

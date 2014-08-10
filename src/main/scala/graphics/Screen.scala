@@ -1,5 +1,7 @@
 package graphics
 
+import objects.GameObject
+
 class Screen {
 
   val length: Int = 800
@@ -18,6 +20,11 @@ class Screen {
   def update(delta: Double) = {
     for (layer <- layers) layer.update(delta, (length, width))
   }
+
+  private def outOfScreen(obj: GameObject): Boolean =
+    obj.position.x > length || obj.position.x < 0 || obj.position.y > width || obj.position.y < 0
+
+  def removeWhenOutOfScreen(obj: GameObject, layer: Layer) = if (outOfScreen(obj)) layer.remove(obj)
 
   def drawAll() = {
     for {

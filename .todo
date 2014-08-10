@@ -1,1 +1,17 @@
+1) make global timer                                                                      +
+2) flying squares appears every n time units
+3) coins
+4) -> scores
+5) NICE collisions
+6) rotation of coin
+7) difficulty
+
+===
+# bugs:
+- circle disappears when out of the screen
+
+
+===
+# Global TODO:
+1) Embed slick to SBT
 
