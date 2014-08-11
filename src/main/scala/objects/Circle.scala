@@ -32,14 +32,12 @@ class Circle(pos: Vec) extends GameObject(pos) {
 
   override def collide(target: GameObject): Unit = target match {
     case _: Square => crash()
-    case _: Circle => "will implement later"
     case _: Coin => addScore()
-    case _ => "thrown an exception"
+//    case _ => "thrown an exception"
   }
 
   def crash() = {
     speed = 0
-//    forRemove = true
-    println("collide")
+    forRemove = true
   }
 }

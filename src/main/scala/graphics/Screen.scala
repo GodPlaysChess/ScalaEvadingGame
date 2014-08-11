@@ -1,6 +1,6 @@
 package graphics
 
-import objects.GameObject
+import objects.{Square, GameObject}
 
 class Screen {
 
@@ -19,6 +19,7 @@ class Screen {
 
   def update(delta: Double) = {
     for (layer <- layers) layer.update(delta, (length, width))
+    if (enemies.entities.size < 5) enemies.add(new Square())
   }
 
   private def outOfScreen(obj: GameObject): Boolean =

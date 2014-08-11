@@ -4,6 +4,18 @@ import org.lwjgl.opengl.GL11._
 
 object Shapes {
 
+  def drawSquare(x: Double, y: Double, size: Double): Unit = {
+    glPushMatrix()
+    glBegin(GL_QUADS)
+    glVertex2d(x - size, y - size)
+    glVertex2d(x + size, y - size)
+    glVertex2d(x + size, y + size)
+    glVertex2d(x - size, y + size)
+    glEnd()
+    glPopMatrix()
+  }
+
+
   def drawCircle(x: Double, y: Double, radius: Int) = {
     glColor3f(0.5f, 0.5f, 0.9f)
     glPushMatrix()

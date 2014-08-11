@@ -1,5 +1,6 @@
 package objects
 
+import graphics.Shapes
 import mechanics.Vec
 import org.lwjgl.opengl.GL11._
 
@@ -15,20 +16,13 @@ class Square(pos: Vec, speed: Double) extends GameObject(pos) {
 
   override def draw() = {
     glColor3f(0.1f, 1f, 0.1f)
-    glPushMatrix()
-    glBegin(GL_QUADS)
-    glVertex2d(x - size, y - size)
-    glVertex2d(x + size, y - size)
-    glVertex2d(x + size, y + size)
-    glVertex2d(x - size, y + size)
-    glEnd()
-    glPopMatrix()
+    Shapes.drawSquare(x, y, size)
 
   }
 
   override def update(delta: Double, border: (Double, Double)) = {
     position += Vec(speed * delta, 0)
-    goThroughScreenCorrection(border)
+    if (outOfBorder(border)) forRemove = true
   }
 
   override def size: Double = 10

@@ -2,7 +2,7 @@ package objects
 
 import mechanics.Vec
 
-abstract class GameObject(var position: Vec, val forRemove: Boolean = false) {
+abstract class GameObject(var position: Vec, var forRemove: Boolean = false) {
 
   def size: Double
 
@@ -29,6 +29,10 @@ abstract class GameObject(var position: Vec, val forRemove: Boolean = false) {
     if (y < 0) position = Vec(x, 1)
     if (y > border._2) position = Vec(x, border._2 - 1)
   }
+
+  def outOfBorder(border: (Double, Double)): Boolean =
+    position.abs % new Vec(border) == position
+
 
   override def toString = getClass.getSimpleName + " " + position
 }

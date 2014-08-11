@@ -14,6 +14,10 @@ final class Vec(val x: Double, val y: Double) {
 
   def /(n: Double) = new Vec(x / n, y / n)
 
+  def %(n: Int) = Vec(x % n, y % n)
+
+  def %(other: Vec) = Vec(x % other.x, y % other.y)
+
   def length = math.hypot(x, y)
 
   def normal = new Vec(x / length, y / length)
@@ -26,6 +30,9 @@ final class Vec(val x: Double, val y: Double) {
 
   def ==(other: Vec) = x == other.x && y == other.y
 
+  def abs = Vec(math.abs(x), math.abs(y))
+
+  def this(pos :(Double, Double)) = this(pos._1, pos._2)
 
   override def toString = "[" + x + " , " + y + "]"
 
