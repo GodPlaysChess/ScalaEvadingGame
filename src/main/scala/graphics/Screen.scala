@@ -1,7 +1,7 @@
 package graphics
 
+import mechanics.ObjectsFactory
 import utilities.Logging
-
 
 class Screen extends Logging {
 
@@ -17,15 +17,11 @@ class Screen extends Logging {
   val text = new Layer
 
   val layers = List(background, bullets, enemies, bonus, fx, foreground, text)
+  val enemiesWatcher = new ObjectsFactory(enemies, (length, height))
 
   def update(delta: Double) = {
     for (layer <- layers) layer.update(delta, (length, height))
-
-    // creation enemies logic. Dedicate this to factory
-//    if (enemies.entities.size < 2) {
-//      1 to (2 - enemies.entities.size) foreach { _ => enemies.add(new Square(11, Random.nextInt(height)))}
-//      logger.info("Creating a new enemy")
-//    }
+    enemiesWatcher.updateLayer
   }
 
   def drawAll() = {

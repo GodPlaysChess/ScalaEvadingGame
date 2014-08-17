@@ -1,5 +1,5 @@
-1) make global timer                                       +
-2) flying squares appears every n time units
+1) make global timer                                                             +
+2) flying squares appears every n time units    //yet if one dissapers           +
 3) coins
 4) -> scores
 5) NICE collisions

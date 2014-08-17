@@ -1,5 +1,7 @@
 package mechanics
 
+import scala.util.Random
+
 /**
  * Immutable geometrical vector
  **/
@@ -32,7 +34,7 @@ final class Vec(val x: Double, val y: Double) {
 
   def abs = Vec(math.abs(x), math.abs(y))
 
-  def this(pos :(Double, Double)) = this(pos._1, pos._2)
+  def this(pos: (Double, Double)) = this(pos._1, pos._2)
 
   override def toString = "[" + x + " , " + y + "]"
 
@@ -40,4 +42,11 @@ final class Vec(val x: Double, val y: Double) {
 
 object Vec {
   def apply(x: Double, y: Double) = new Vec(x, y)
+}
+
+object RandomVec {
+  def apply(borderLength: Number, borderHeight: Number) = new Vec(
+    Random.nextInt(borderLength.intValue()),
+    Random.nextInt(borderHeight.intValue())
+  )
 }
