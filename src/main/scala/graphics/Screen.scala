@@ -1,6 +1,6 @@
 package graphics
 
-import mechanics.ObjectsFactory
+import mechanics.LayerWatcher
 import utilities.Logging
 
 class Screen extends Logging {
@@ -17,11 +17,11 @@ class Screen extends Logging {
   val text = new Layer
 
   val layers = List(background, bullets, enemies, bonus, fx, foreground, text)
-  val enemiesWatcher = new ObjectsFactory(enemies, (length, height))
+  val enemiesWatcher = new LayerWatcher(enemies, (length, height))
 
   def update(delta: Double) = {
     for (layer <- layers) layer.update(delta, (length, height))
-    enemiesWatcher.updateLayer
+    enemiesWatcher.completeLayer
   }
 
   def drawAll() = {
