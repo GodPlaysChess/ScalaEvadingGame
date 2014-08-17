@@ -15,7 +15,9 @@ class Layer {
     for (entity <- entities) {
       entity.update(delta, dimensions)
     }
-    entities.filter(obj => obj.forRemove)
+    println("removing " + entities.filter(obj => obj.forRemove))
+    entities --= entities.filter(obj => obj.forRemove)
+
   }
 
   override def toString = entities.toString()

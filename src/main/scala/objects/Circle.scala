@@ -23,7 +23,7 @@ class Circle(pos: Vec) extends GameObject(pos) {
     if (InputTracker.isDownPressed) verticalShift -= speed
     if (InputTracker.isUpPressed) verticalShift += speed
     position -= Vec(horizontalShift * delta, verticalShift * delta)
-    bounceCorrection(border)
+    stayInCorrection(border)
   }
 
   override def size: Double = radius
@@ -37,7 +37,7 @@ class Circle(pos: Vec) extends GameObject(pos) {
   }
 
   def crash() = {
-    speed = 0
+    speed = 1
     forRemove = true
   }
 }

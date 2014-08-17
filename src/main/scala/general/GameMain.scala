@@ -1,7 +1,7 @@
 package general
 
-import mechanics.{Vec, CollisionDetector}
-import objects.{Score, Circle, Square}
+import mechanics.{CollisionDetector, Vec}
+import objects.{Square, Circle, Score}
 import org.lwjgl.opengl.{Display, DisplayMode, GL11}
 import org.lwjgl.{LWJGLException, Sys}
 
@@ -30,7 +30,7 @@ object GameMain {
   }
 
   def initializeInitialDisposition() = {
-    val circle = new Circle(50, 50)
+    val circle = new Circle(screen.length/2, screen.height/2)
     val square = new Square(100, 100)
     screen.foreground.add(circle)
     screen.enemies.add(square)
@@ -38,7 +38,7 @@ object GameMain {
     screen.enemies.add(new Square(1))
     screen.enemies.add(new Square(0.3))
 
-    screen.text.add(new Score(Vec(screen.length / 2, screen.width - 100)))
+    screen.text.add(new Score(Vec(screen.length - 120, 0)))
 
     println(screen.enemies)
   }
@@ -95,7 +95,7 @@ object GameMain {
 
   private def createDisplay() {
     try {
-      Display.setDisplayMode(new DisplayMode(screen.length, screen.width))
+      Display.setDisplayMode(new DisplayMode(screen.length, screen.height))
       Display.create()
     } catch {
       case e: LWJGLException => e.printStackTrace()
@@ -105,7 +105,7 @@ object GameMain {
   private def initializeGL() {
     GL11.glMatrixMode(GL11.GL_PROJECTION)
     GL11.glLoadIdentity()
-    GL11.glOrtho(0, screen.length, screen.width, 0, 1, -1)
+    GL11.glOrtho(0, screen.length, screen.height, 0, 1, -1)
     GL11.glMatrixMode(GL11.GL_MODELVIEW)
   }
 

@@ -1,11 +1,12 @@
 package graphics
 
-import objects.{Square, GameObject}
+import utilities.Logging
 
-class Screen {
+
+class Screen extends Logging {
 
   val length: Int = 800
-  val width: Int = 600
+  val height: Int = 600
 
   val background = new Layer
   val bullets = new Layer
@@ -18,14 +19,14 @@ class Screen {
   val layers = List(background, bullets, enemies, bonus, fx, foreground, text)
 
   def update(delta: Double) = {
-    for (layer <- layers) layer.update(delta, (length, width))
-    if (enemies.entities.size < 5) enemies.add(new Square())
+    for (layer <- layers) layer.update(delta, (length, height))
+
+    // creation enemies logic. Dedicate this to factory
+//    if (enemies.entities.size < 2) {
+//      1 to (2 - enemies.entities.size) foreach { _ => enemies.add(new Square(11, Random.nextInt(height)))}
+//      logger.info("Creating a new enemy")
+//    }
   }
-
-  private def outOfScreen(obj: GameObject): Boolean =
-    obj.position.x > length || obj.position.x < 0 || obj.position.y > width || obj.position.y < 0
-
-  def removeWhenOutOfScreen(obj: GameObject, layer: Layer) = if (outOfScreen(obj)) layer.remove(obj)
 
   def drawAll() = {
     for {

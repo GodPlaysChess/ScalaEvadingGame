@@ -1,8 +1,11 @@
 package objects
 
 import mechanics.Vec
+import utilities.Logging
 
-abstract class GameObject(var position: Vec, var forRemove: Boolean = false) {
+abstract class GameObject(var position: Vec, var forRemove: Boolean = false) extends Logging {
+
+  logger.info("Creating " + toString)
 
   def size: Double
 
@@ -23,16 +26,17 @@ abstract class GameObject(var position: Vec, var forRemove: Boolean = false) {
     if (y > border._2) position = Vec(x, y % border._2)
   }
 
-  def bounceCorrection(border: (Double, Double)): Unit = {
+  def stayInCorrection(border: (Double, Double)): Unit = {
     if (x < 0) position = Vec(1, y)
     if (x > border._1) position = Vec(border._1 - 1, y)
     if (y < 0) position = Vec(x, 1)
     if (y > border._2) position = Vec(x, border._2 - 1)
   }
 
-  def outOfBorder(border: (Double, Double)): Boolean =
-    position.abs % new Vec(border) == position
+  def bounceCorrection = ???
 
+  def insideBorder(border: (Double, Double)): Boolean =
+    position.abs % Vec(border._1, border._2) == position
 
   override def toString = getClass.getSimpleName + " " + position
 }
