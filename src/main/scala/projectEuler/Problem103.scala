@@ -4,7 +4,7 @@ import scala.collection.SortedSet
 
 object Problem103 {
   def main(args: Array[String]) {
-                        println(findNextOptimumSet(SortedSet(1)))
+    println(findNextOptimumSet(SortedSet(1)))
   }
 
   def findNextOptimumSet(set: SortedSet[Int]): SortedSet[Int] = {
