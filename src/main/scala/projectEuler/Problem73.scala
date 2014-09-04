@@ -1,41 +1,35 @@
 package projectEuler
 
 import projectEuler.old.BigRational
-import scala.collection.mutable.Set
 
+/**
+ * First solutions with creating set of BigRationals was taken 102309 msec
+ * This solution is taking 932 msec (100 times faster)
+ * Answer is 7295372
+ * Solved 03.09.2014
+ */
 object Problem73 {
   val lowLimit = new BigRational(1, 3)
   val hiLimit = new BigRational(1, 2)
   val maxD = 12000
 
-  def highLimitNumeratorForD(d: Int): Int = if (d % 2 == 0) d / 2 - 1 else d / 2
+  def highLimitNumeratorForD(d: Int): Int = (d - 1) / 2
 
   def lowLimitNumeratorForD(d: Int): Int = d / 3 + 1
 
-  def fractionsInRange(d: Int): Set[BigRational] = {
-    val fractions: Set[BigRational] = Set()
+  def fractionsInRange(d: Int): Int = {
     val lowLimNum = lowLimitNumeratorForD(d)
     val hiLimNum = highLimitNumeratorForD(d)
-    var numerator = hiLimNum
-    while (numerator >= lowLimNum && numerator > 0) {
-      fractions += new BigRational(numerator, d)
-//      println("adding " + numerator + "/" + d)
-      numerator -= 1
-
-    }
-    println(d + " | " + fractions.size)
-    fractions
+    if (lowLimNum > hiLimNum) 0
+    else (lowLimNum to hiLimNum).count(x => gcd(x, d) == 1)
   }
 
-  def solve() = {
-//    val size = (1 to maxD).foldLeft(Set[BigRational]())((acc, x) => acc ++ fractionsInRange(x)).size
-    val result = Set[BigRational]()
-    for (i <- 1 to maxD) {
-      result ++= fractionsInRange(i)
+  def gcd(a: Int, b: Int): Int =
+    if (b == 0) a else gcd(b, a % b)
 
-    }
-//    val size = (1 to maxD flatMap fractionsInRange).c
-    println(result.size)
+  def solve() = {
+    val size = (1 to maxD).map(fractionsInRange).sum
+    println(size)
   }
 
   def main(args: Array[String]) {
