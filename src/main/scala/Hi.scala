@@ -1,8 +1,10 @@
-import general.TestScreen
+
 
 object Hi {
   def main(args: Array[String]) {
-    new TestScreen(800, 600).start
+    for( a <- 1 to 10){
+      println( "Value of a: " + a );
+    }
   }
 
 }
