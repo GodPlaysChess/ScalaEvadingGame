@@ -1,14 +1,46 @@
 package projectEuler
 
+import scala.collection.mutable.ArrayBuffer
+
 /**
  * Created by GlebP on 05-Sep-2014.
  */
 object Problem75 extends Problem {
 
-  val maxL = 1500 //1500000
+  val maxL = 100//000
 
   override def solve: Unit = {
-    println(anotherBruteforce())
+    val c = smartTraverseThrough()
+    println(c)
+  }
+
+  def smartTraverseThrough(): Long = {
+    val seq: Array[Int] = new Array[Int](maxL)
+    for (l <- 1 to maxL) {
+      if (seq(l - 1) == 0) {
+        val a = findABforL(l)
+        if (a != 0) {
+          (l to maxL).by(l).foreach(i => seq(i - 1) += 1)
+        }
+      }
+    }
+    var counter = 0
+    for (x <- seq) {
+      if (x == 1) counter +=1
+    }
+//    println("size = " + seq.filter(i => seq(i) == 1).size)
+    println(seq.count(i => seq(i) == 1))
+    println(seq)
+    counter
+  }
+
+  def findABforL(l: Int): Int = {
+//    println(l)
+    for (a <- 1 to l / 3) {
+      if ((l * l - 2 * a * l) % (2 * l - 2 * a) == 0) return a
+    }
+
+    0
   }
 
   //bruteforce 1835msec for 1500L. Answer: 288
@@ -35,7 +67,7 @@ object Problem75 extends Problem {
       b = l - a - c
       if b <= a && a * a + b * b == c * c
     } yield {
-//      printf(" %d = %d + %d + %d \n ", l, c, a, b)
+      printf(" %d = %d + %d + %d \n ", l, c, a, b)
       if (count == 1) return false
       count += 1
     }
