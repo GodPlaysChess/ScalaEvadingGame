@@ -4,9 +4,11 @@ object weekOne {
 
   def main(args: Array[String]) {
     val dec = new Decrypter
+    /* symbols which supposively used in messages */
     val alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ,.!"
     val hexedAlphabet = dec.hex(alphabet)
 
+    /* given cyphered messages */
     val c1 = "315c4eeaa8b5f8aaf9174145bf43e1784b8fa00dc71d885a804e5ee9fa40b16349c146fb778cdf2d3aff021dfff5b403b510d0d0455468aeb98622b137dae857553ccd8883a7bc37520e06e515d22c954eba5025b8cc57ee59418ce7dc6bc41556bdb36bbca3e8774301fbcaa3b83b220809560987815f65286764703de0f3d524400a19b159610b11ef3e"
     val c2 = "234c02ecbbfbafa3ed18510abd11fa724fcda2018a1a8342cf064bbde548b12b07df44ba7191d9606ef4081ffde5ad46a5069d9f7f543bedb9c861bf29c7e205132eda9382b0bc2c5c4b45f919cf3a9f1cb74151f6d551f4480c82b2cb24cc5b028aa76eb7b4ab24171ab3cdadb8356f"
     val c3 = "32510ba9a7b2bba9b8005d43a304b5714cc0bb0c8a34884dd91304b8ad40b62b07df44ba6e9d8a2368e51d04e0e7b207b70b9b8261112bacb6c866a232dfe257527dc29398f5f3251a0d47e503c66e935de81230b59b7afb5f41afa8d661cb"
@@ -17,11 +19,12 @@ object weekOne {
     val c8 = "315c4eeaa8b5f8bffd11155ea506b56041c6a00c8a08854dd21a4bbde54ce56801d943ba708b8a3574f40c00fff9e00fa1439fd0654327a3bfc860b92f89ee04132ecb9298f5fd2d5e4b45e40ecc3b9d59e9417df7c95bba410e9aa2ca24c5474da2f276baa3ac325918b2daada43d6712150441c2e04f6565517f317da9d3"
     val c9 = "271946f9bbb2aeadec111841a81abc300ecaa01bd8069d5cc91005e9fe4aad6e04d513e96d99de2569bc5e50eeeca709b50a8a987f4264edb6896fb537d0a716132ddc938fb0f836480e06ed0fcd6e9759f40462f9cf57f4564186a2c1778f1543efa270bda5e933421cbe88a4a52222190f471e9bd15f652b653b7071aec59a2705081ffe72651d08f822c9ed6d76e48b63ab15d0208573a7eef027"
     val c10 = "466d06ece998b7a2fb1d464fed2ced7641ddaa3cc31c9941cf110abbf409ed39598005b3399ccfafb61d0315fca0a314be138a9f32503bedac8067f03adbf3575c3b8edc9ba7f537530541ab0f9f3cd04ff50d66f1d559ba520e89a2cb2a83"
-
+    /* this one needs to decrypt */
     val t = "32510ba9babebbbefd001547a810e67149caee11d945cd7fc81a05e9f85aac650e9052ba6a8cd8257bf14d13e6f0a803b54fde9e77472dbff89d71b57bddef121336cb85ccb8f3315f4b52e301d16e9f52f904"
 
     val cypheredMessages = List(c1, c2, c3, c4, c5, c6, c7, c8, c9, c10)
 
+    /* all xored messages == cyphered xored messages for analysis */
     val xoredMessages = for {
       cm1 <- cypheredMessages
       cm2 <- cypheredMessages
@@ -29,10 +32,11 @@ object weekOne {
     } yield {
       dec.xor(cm1, cm2)
     }
-
+    /* m1^m2 = x1. This map represents x1 => frequency(x1) in xored messages */
     val cypheredAlphabet = sortByMostOccuredChars(xoredMessages.reduce(_ + _))
-    val xoredCharsMap = scala.collection.mutable.Map[String, Set[String]]()//.withDefaultValue(Set[String]())
 
+    /* values of alphabet xored with itself */
+    val xoredCharsMap = scala.collection.mutable.Map[String, Set[String]]()
     for (let1 <- hexedAlphabet.sliding(2, 2); let2 <- hexedAlphabet.sliding(2, 2)) {
       if (xoredCharsMap.contains(dec.xor(let1, let2))) {
         val set = xoredCharsMap.get(dec.xor(let1, let2))
@@ -45,7 +49,15 @@ object weekOne {
     /* taking last 26 codes from cyphered alphabet, which represents ? ^ e */
     val top26Occureneces = cypheredAlphabet.takeRight(26).map(entry => (entry, xoredCharsMap(entry._1).filter(_.contains("e"))))
 
+    /* text analysis must fill this table */
+    val decryptedAlphabet: Map[String, String] = Map[String, String]()
+
+    /* taking values from this map, try to decrypt at least one message */
+
+    /* having a message, determine a key, by message ^ cypheredMessage */
+
     top26Occureneces.foreach(println(_))
+    println("xored M1 and M2 : \n" + dec.xor(c1, c2))
   }
 
   def sortByMostOccuredChars(message: String): List[(String, Int)] = {
