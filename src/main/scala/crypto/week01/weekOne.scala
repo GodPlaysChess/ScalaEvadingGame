@@ -5,7 +5,7 @@ object weekOne {
   def main(args: Array[String]) {
     val dec = new Decrypter
     /* symbols which supposively used in messages */
-    val alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ,.!"
+    val alphabet = "abcdefghijklmnopqrstuvwxyz "
     val hexedAlphabet = dec.hex(alphabet)
 
     /* given cyphered messages */
@@ -46,18 +46,16 @@ object weekOne {
       }
     }
 
-    /* taking last 26 codes from cyphered alphabet, which represents ? ^ e */
-    val top26Occureneces = cypheredAlphabet.takeRight(26).map(entry => (entry, xoredCharsMap(entry._1).filter(_.contains("e"))))
+    /* starting decrypting point */
+    val tVsM = dec.xor(t, c2) //whatever
 
-    /* text analysis must fill this table */
-    val decryptedAlphabet: Map[String, String] = Map[String, String]()
+    /* take, say first 10 letters of this message and try bruteforce decrypt it */
 
-    /* taking values from this map, try to decrypt at least one message */
+    /* printout(or write to file) all 10-letter words (should be no more than 20^10 combinations */
+
+    /* proceed to the next 10 letter words. If perfomance is an issue - make smaller increment (6 letters, for instance) */
 
     /* having a message, determine a key, by message ^ cypheredMessage */
-
-    top26Occureneces.foreach(println(_))
-    println("xored M1 and M2 : \n" + dec.xor(c1, c2))
   }
 
   def sortByMostOccuredChars(message: String): List[(String, Int)] = {
