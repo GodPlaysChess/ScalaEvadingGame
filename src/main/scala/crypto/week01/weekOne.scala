@@ -91,6 +91,39 @@ object weekOne {
     appendNextCharToTheString(List[String](""), lists)
   }
 
+  /**
+   * Bruteforce generation of a single message. Basically must provide two messages as output. (deciphered c1, and deciphered c2)
+   * */
+  def generateAllPossiblePairs(lists: List[Set[String]]): List[(String, String)] = {
+    def appendNextCharToTheString(result: List[(String, String)], rest: List[Set[String]]): List[(String, String)] = {
+      /* quit condition*/
+      if (rest.isEmpty) return result
+
+      /* initializing routine */
+      val candidates = rest.head // this is set of two-char entry, such as "a-q", "e-f", etc..
+      val passFurther = rest.tail
+      /* extracting candidates to the list of characters (YES Yet erasing information about "Another" message) */
+//      val candidateString: String = candidates.reduce(_+_)
+
+      /* given a list of incomplete strings, I need to expand it to match exact the number of combinations */
+      //f.e. List("a","b") needs to become List ("a", "a,", "b", "b") to match candidates "c-d"
+      /* go over them and populate them into expanded result list */
+      val populatedResult: Set[(String, String)] = for {
+        pairOfChars <- candidates
+        prefix <- result    // must create a string if empty
+      } yield {
+        (prefix._1.concat(pairOfChars.head.toString),
+        prefix._2.concat(pairOfChars.tail.toString))
+        (prefix._2.concat(pairOfChars.head.toString),
+          prefix._1.concat(pairOfChars.tail.toString))
+      }
+      // which leads to List("ac", "ad", "bc", bd") for next iteration
+      appendNextCharToTheString(populatedResult.toList, passFurther)
+    }
+    // starting with empty list and then go char by char
+    appendNextCharToTheString(List[(String, String)](("", "")), lists)
+  }
+
   def sortByMostOccuredChars(message: String): List[(String, Int)] = {
     splitBy2(message).groupBy(m => m).mapValues(_.size).toList.sortBy(_._2)
   }

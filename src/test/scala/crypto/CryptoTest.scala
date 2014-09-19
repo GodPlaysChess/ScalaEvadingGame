@@ -26,7 +26,12 @@ class CryptoTest {
   }
 
   @Test
-  def hex = {
+  def generateAllPossiblePairs() = {
+    assert(weekOne.generateAllPossiblePairs(List(Set("ab"), Set("cd"))) == List(("ac", "bd"), ("ad", "bc")), weekOne.generateAllPossiblePairs(List(Set("ab"), Set("cd"))))
+  }
+
+  @Test
+  def hex() = {
     val dec = new Decrypter
     assert(dec.hex("abcdef") == "616263646566")
     assert(dec.hex("abcdefdfdAASDFASD") == "6162636465666466644141534446415344")
@@ -37,7 +42,7 @@ class CryptoTest {
   }
 
   @Test
-  def toNormal = {
+  def toNormal() = {
     val dec = new Decrypter
     assert(dec.normal("616263646566") == "abcdef", dec.normal("616263646566"))
     assert(dec.normal("6162636465666466644141534446415344") == "abcdefdfdAASDFASD")
