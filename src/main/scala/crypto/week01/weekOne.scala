@@ -40,28 +40,64 @@ object weekOne {
     for (let1 <- hexedAlphabet.sliding(2, 2); let2 <- hexedAlphabet.sliding(2, 2)) {
       if (xoredCharsMap.contains(dec.xor(let1, let2))) {
         val set = xoredCharsMap.get(dec.xor(let1, let2))
-        xoredCharsMap.put(dec.xor(let1, let2), set.get + (dec.normal(let1) + "-" + dec.normal(let2)))
+        xoredCharsMap.put(dec.xor(let1, let2), set.get + (dec.normal(let1) + dec.normal(let2)))
       } else {
-        xoredCharsMap.put(dec.xor(let1, let2), Set(dec.normal(let1) + "-" + dec.normal(let2)))
+        xoredCharsMap.put(dec.xor(let1, let2), Set(dec.normal(let1) + dec.normal(let2)))
       }
     }
 
     /* starting decrypting point */
-    val tVsM = dec.xor(t, c2) //whatever
+    val tVsM = dec.xor(t, c2) //cx is not matter at all
 
     /* take, say first 10 letters of this message and try bruteforce decrypt it */
-
+    val bundle = splitBy2(tVsM.take(4 * 2)) // each letter is represented by 2 symbols
     /* printout(or write to file) all 10-letter words (should be no more than 20^10 combinations */
+    val listOfPossiblePlainMessages = generateAllPossiblePlainMessage(bundle.map(code => xoredCharsMap(code)))
 
     /* proceed to the next 10 letter words. If perfomance is an issue - make smaller increment (6 letters, for instance) */
-
+    listOfPossiblePlainMessages.foreach(println(_))                                      //now generating all possible 8-lettered words
+    //crap, have already 17K 4lettered words reduced from 531441 words.. I am definitely doing something wrong
     /* having a message, determine a key, by message ^ cypheredMessage */
+
+  }
+
+  /**
+   * Bruteforce generation of a single message. Basically must provide two messages as output. (deciphered c1, and deciphered c2)
+   * */
+  def generateAllPossiblePlainMessage(lists: List[Set[String]]): List[String] = {
+    def appendNextCharToTheString(result: List[String], rest: List[Set[String]]): List[String] = {
+      /* quit condition*/
+      if (rest.isEmpty) return result
+
+      /* initializing routine */
+      val candidates = rest.head // this is set of two-char entry, such as "a-q", "e-f", etc..
+      val passFurther = rest.tail
+      /* extracting candidates to the list of characters (YES Yet erasing information about "Another" message) */
+      val candidateString: String = candidates.reduce(_+_)
+
+      /* given a list of incomplete strings, I need to expand it to match exact the number of combinations */
+                        //f.e. List("a","b") needs to become List ("a", "a,", "b", "b") to match candidates "c-d"
+      /* go over them and populate them into expanded result list */
+      val populatedResult: IndexedSeq[String] = for {
+        char <- candidateString
+        prefix <- result    // must create a string if empty
+      } yield {
+         prefix.concat(char.toString)
+      }
+      // which leads to List("ac", "ad", "bc", bd") for next iteration
+      appendNextCharToTheString(populatedResult.toSet.toList, passFurther)
+    }
+    // starting with empty list and then go char by char
+    appendNextCharToTheString(List[String](""), lists)
   }
 
   def sortByMostOccuredChars(message: String): List[(String, Int)] = {
     splitBy2(message).groupBy(m => m).mapValues(_.size).toList.sortBy(_._2)
   }
 
+  /**
+   * converts string to a list of strings, 2 characters length each.
+   */
   def splitBy2(message: String): List[String] = {
     def splitBy2(message: List[Char], result: List[String]): List[String] = message match {
       case Nil => result

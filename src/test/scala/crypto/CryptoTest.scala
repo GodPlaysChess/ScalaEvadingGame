@@ -13,10 +13,16 @@ class CryptoTest {
     val message4 = "23asdd32"
     println(weekOne.sortByMostOccuredChars(message2))
 
-    assert(weekOne.splitBy2(message1) == List("he", "ll", "o ", "gl", "eb"), "actual splitting" + weekOne.splitBy2(message1))
-    assert(weekOne.splitBy2(message2) == List("go", "oo", "d ", "by", "e"), "actual splitting" + weekOne.splitBy2(message2))
-    assert(weekOne.splitBy2(message3) == List("n"), "actual splitting" + weekOne.splitBy2(message3))
-    assert(weekOne.splitBy2(message4) == List("23", "as", "dd", "32"), "actual splitting" + weekOne.splitBy2(message4))
+    assert(weekOne.splitBy2(message1) == List("he", "ll", "o ", "gl", "eb"), "actual splitting " + weekOne.splitBy2(message1))
+    assert(weekOne.splitBy2(message2) == List("go", "oo", "d ", "by", "e"), "actual splitting " + weekOne.splitBy2(message2))
+    assert(weekOne.splitBy2(message3) == List("n"), "actual splitting " + weekOne.splitBy2(message3))
+    assert(weekOne.splitBy2(message4) == List("23", "as", "dd", "32"), "actual splitting " + weekOne.splitBy2(message4))
+  }
+
+  @Test
+  def makeAllPossibleStrings() = {
+    assert(weekOne.generateAllPossiblePlainMessage(List(Set("ab"), Set("cd"))) == List("ac", "bc", "ad", "bd"), weekOne.generateAllPossiblePlainMessage(List(Set("ab"), Set("cd"))))
+    assert(weekOne.generateAllPossiblePlainMessage(List(Set("ab", "xy"), Set("cd"))) == List("ac", "bc", "xc", "yc" ,"ad", "bd", "xd", "yd"), weekOne.generateAllPossiblePlainMessage(List(Set("ab"), Set("cd"))))
   }
 
   @Test
