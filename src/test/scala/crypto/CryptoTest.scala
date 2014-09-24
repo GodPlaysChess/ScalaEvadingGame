@@ -51,4 +51,14 @@ class CryptoTest {
     assert(dec.normal("6171775b70666c64666d2c7664696c663b666573") == "aqw[pfldfm,vdilf;fes")
   }
 
+  @Test
+  def myXor() = {
+    val dec = new Decrypter
+    assert(dec.myxor("616263646566", "dfd1fd1f") == "6162bcb59879", dec.myxor("616263646566", "dfd1fd1f"))
+    assert(dec.myxor("cd", "a1") == "6c", dec.myxor("cd", "a1"))
+    assert(dec.myxor("aa", "aa") == "00", dec.myxor("aa", "aa"))
+    assert(dec.myxor("a121", "aadd34") == "aa7c15", dec.myxor("a121", "aadd34"))
+    assert(dec.myxor("aadd34", "a121") == "aa7c15", dec.myxor("a121", "aadd34"))
+  }
+
 }

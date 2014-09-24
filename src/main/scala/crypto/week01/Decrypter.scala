@@ -16,9 +16,9 @@ class Decrypter {
     val zeroes = String.valueOf(Array.fill[Char](math.abs(countZeroes)) {'0'})
 
     def myxor(key: String, mess: String, result: StringBuilder): StringBuilder = {
-      if (key.length == 0) result
+      if (key.length == 0) return result
       val (k1, k2) = key.splitAt(2)
-      val (m1, m2) = key.splitAt(2)
+      val (m1, m2) = mess.splitAt(2)
       var xored = (Integer.parseInt(k1, 16) ^ Integer.parseInt(m1, 16)).toHexString
       if (xored.length == 1) xored += "0"
       myxor(k2, m2, result.append(xored))

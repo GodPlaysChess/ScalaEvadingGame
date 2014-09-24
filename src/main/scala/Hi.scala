@@ -1,10 +1,12 @@
-
+import crypto.week01.Decrypter
 
 object Hi {
   def main(args: Array[String]) {
-    for( a <- 1 to 10){
-      println( "Value of a: " + a );
-    }
+    val dec = new Decrypter
+    println(dec.myxor("aa12", "bf"));
+    println(dec.xor("aa12", "bf"));
+
   }
 
 }
+
