@@ -10,7 +10,7 @@ class Decrypter {
     hexedMessage.sliding(2, 2).map(Integer.parseInt(_, 16)).map(_.toChar.toString).reduce(_ + _)
   }
 
-  def myxor(key: String, mess: String): String = {
+  def xor(key: String, mess: String): String = {
     val result = new StringBuilder
     val countZeroes = key.length - mess.length
     val zeroes = String.valueOf(Array.fill[Char](math.abs(countZeroes)) {'0'})
@@ -27,8 +27,7 @@ class Decrypter {
     else myxor(key, zeroes + mess, result).toString()
   }
 
-
-  def xor(hexOne: String, hexAnother: String): String = {
+  private def xorStolen(hexOne: String, hexAnother: String): String = {
     val iterator1 = hexOne.sliding(2, 2)
     val iterator2 = hexAnother.sliding(2, 2)
     val result = new StringBuilder

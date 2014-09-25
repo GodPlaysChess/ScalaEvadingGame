@@ -1,12 +1,18 @@
 package crypto.week01
 
 object weekOne {
+  val dec = new Decrypter
+  /* symbols which supposively used in messages */
+  val alphabet = "abcdefghijklmnopqrstuvwxyz "
+  val fullAlphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "                                                                             //??|
+  var finalKey = "66 39 6e 89 c9 db d8 cc 98 74 35 2a cd 63 95 10 2e af ce 78 aa 7f ed 28 a0 7f 6b c9 8d 29 c5 0b 69 b0 33 9a 19 f8 aa 40 1a 9c 6d 70 8f 80 c0 66 c7 6f 00 00 12 31 00 00 00 00 2 00 5b 00 00 77 33 5d 00 00 00 00 00 43 3a 6b 26 00"
+  val len = 30                                                                    //23    25 26             31 32 33
 
   def main(args: Array[String]) {
-    val dec = new Decrypter
-    /* symbols which supposively used in messages */
-    val alphabet = "abcdefghijklmnopqrstuvwxyz "
+
+    val space = " "
     val hexedAlphabet = dec.hex(alphabet)
+    val lettersXorSpace = alphabet.groupBy(letter => dec.xor(dec.hex(letter.toString), dec.hex(space)))
 
     /* given cyphered messages */
     val c1 = "315c4eeaa8b5f8aaf9174145bf43e1784b8fa00dc71d885a804e5ee9fa40b16349c146fb778cdf2d3aff021dfff5b403b510d0d0455468aeb98622b137dae857553ccd8883a7bc37520e06e515d22c954eba5025b8cc57ee59418ce7dc6bc41556bdb36bbca3e8774301fbcaa3b83b220809560987815f65286764703de0f3d524400a19b159610b11ef3e"
@@ -21,21 +27,55 @@ object weekOne {
     val c10 = "466d06ece998b7a2fb1d464fed2ced7641ddaa3cc31c9941cf110abbf409ed39598005b3399ccfafb61d0315fca0a314be138a9f32503bedac8067f03adbf3575c3b8edc9ba7f537530541ab0f9f3cd04ff50d66f1d559ba520e89a2cb2a83"
     /* this one needs to decrypt */
     val t = "32510ba9babebbbefd001547a810e67149caee11d945cd7fc81a05e9f85aac650e9052ba6a8cd8257bf14d13e6f0a803b54fde9e77472dbff89d71b57bddef121336cb85ccb8f3315f4b52e301d16e9f52f904"
+    // t = "The .
+    val cypheredMessages = List(c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, t)
 
-    val cypheredMessages = List(c1, c2, c3, c4, c5, c6, c7, c8, c9, c10)
+
+    //    val knownKey = guessFullKey(cypheredMessages.map(m => m.take(len * 2))) //.reduce(_ + _)
+    //    println(knownKey mkString (" "))
+    //    println(dec.normal(dec.xor(knownKey.reduce(_ + _), t)))
+
+    println("key = " + (0xf0 ^ 'p').toHexString)
+    println("key = " + (0xa8 ^ 'h').toHexString)
+    println("key = " + (0xb5^ 'r').toHexString)
+    println("key = " + (0x4f ^ ' ').toHexString)
+
+
+//    println(dec.normal((0xdb ^ 0xb5).toHexString))
+
+    val partKey = finalKey.filter(c => c != ' ')
+//    println(dec.normal(dec.xor(partKey, c4.take(partKey.length)))) //c4 h e
+
+    //    val knownKeyAsString = knownKey.reduce(_ + _)
+    //    println(knownKeyAsString)
+    //    println(dec.xor(c1, knownKeyAsString))
+    cypheredMessages.foreach(message => println(dec.normal(dec.xor(partKey, message.take(partKey.length)))))
+
 
     /* all xored messages == cyphered xored messages for analysis */
-    val xoredMessages = for {
-      cm1 <- cypheredMessages
-      cm2 <- cypheredMessages
-      if cm1 != cm2
-    } yield {
-      dec.xor(cm1, cm2)
-    }
+    val xoredMessages = getXoredMessages(dec, cypheredMessages)
     /* m1^m2 = x1. This map represents x1 => frequency(x1) in xored messages */
     val cypheredAlphabet = sortByMostOccuredChars(xoredMessages.reduce(_ + _))
 
     /* values of alphabet xored with itself */
+    val xoredCharsMap = getXoredAlphabetCharsMap(hexedAlphabet)
+
+    /* starting decrypting point */
+    //    val tVsM = dec.xor(t, c2) //cx is not matter at all
+
+    /* take, say first 10 letters of this message and try bruteforce decrypt it */
+    //    val bundle = splitBy2(tVsM.take(4 * 2)) // each letter is represented by 2 symbols
+    /* printout(or write to file) all 10-letter words (should be no more than 20^10 combinations */
+    //    val listOfPossiblePlainMessages = generateAllPossiblePlainMessage(bundle.map(code => xoredCharsMap(code)))
+
+    /* proceed to the next 10 letter words. If perfomance is an issue - make smaller increment (6 letters, for instance) */
+    //    listOfPossiblePlainMessages.foreach(println(_))                                      //now generating all possible 8-lettered words
+    //crap, have already 17K 4lettered words reduced from 531441 words.. I am definitely doing something wrong
+    /* having a message, determine a key, by message ^ cypheredMessage */
+
+  }
+
+  def getXoredAlphabetCharsMap(hexedAlphabet: String): scala.collection.mutable.Map[String, Set[String]] = {
     val xoredCharsMap = scala.collection.mutable.Map[String, Set[String]]()
     for (let1 <- hexedAlphabet.sliding(2, 2); let2 <- hexedAlphabet.sliding(2, 2)) {
       if (xoredCharsMap.contains(dec.xor(let1, let2))) {
@@ -45,25 +85,22 @@ object weekOne {
         xoredCharsMap.put(dec.xor(let1, let2), Set(dec.normal(let1) + dec.normal(let2)))
       }
     }
+    xoredCharsMap
+  }
 
-    /* starting decrypting point */
-    val tVsM = dec.xor(t, c2) //cx is not matter at all
-
-    /* take, say first 10 letters of this message and try bruteforce decrypt it */
-    val bundle = splitBy2(tVsM.take(4 * 2)) // each letter is represented by 2 symbols
-    /* printout(or write to file) all 10-letter words (should be no more than 20^10 combinations */
-    val listOfPossiblePlainMessages = generateAllPossiblePlainMessage(bundle.map(code => xoredCharsMap(code)))
-
-    /* proceed to the next 10 letter words. If perfomance is an issue - make smaller increment (6 letters, for instance) */
-    listOfPossiblePlainMessages.foreach(println(_))                                      //now generating all possible 8-lettered words
-    //crap, have already 17K 4lettered words reduced from 531441 words.. I am definitely doing something wrong
-    /* having a message, determine a key, by message ^ cypheredMessage */
-
+  def getXoredMessages(dec: Decrypter, cypheredMessages: List[String]): List[String] = {
+    for {
+      cm1 <- cypheredMessages
+      cm2 <- cypheredMessages
+      if cm1 != cm2
+    } yield {
+      dec.xor(cm1, cm2)
+    }
   }
 
   /**
    * Bruteforce generation of a single message. Basically must provide two messages as output. (deciphered c1, and deciphered c2)
-   * */
+   **/
   def generateAllPossiblePlainMessage(lists: List[Set[String]]): List[String] = {
     def appendNextCharToTheString(result: List[String], rest: List[Set[String]]): List[String] = {
       /* quit condition*/
@@ -73,16 +110,16 @@ object weekOne {
       val candidates = rest.head // this is set of two-char entry, such as "a-q", "e-f", etc..
       val passFurther = rest.tail
       /* extracting candidates to the list of characters (YES Yet erasing information about "Another" message) */
-      val candidateString: String = candidates.reduce(_+_)
+      val candidateString: String = candidates.reduce(_ + _)
 
       /* given a list of incomplete strings, I need to expand it to match exact the number of combinations */
-                        //f.e. List("a","b") needs to become List ("a", "a,", "b", "b") to match candidates "c-d"
+      //f.e. List("a","b") needs to become List ("a", "a,", "b", "b") to match candidates "c-d"
       /* go over them and populate them into expanded result list */
       val populatedResult: IndexedSeq[String] = for {
         char <- candidateString
-        prefix <- result    // must create a string if empty
+        prefix <- result // must create a string if empty
       } yield {
-         prefix.concat(char.toString)
+        prefix.concat(char.toString)
       }
       // which leads to List("ac", "ad", "bc", bd") for next iteration
       appendNextCharToTheString(populatedResult.toSet.toList, passFurther)
@@ -93,7 +130,7 @@ object weekOne {
 
   /**
    * Bruteforce generation of a single message. Basically must provide two messages as output. (deciphered c1, and deciphered c2)
-   * */
+   **/
   def generateAllPossiblePairs(lists: List[Set[String]]): List[(String, String)] = {
     def appendNextCharToTheString(result: List[(String, String)], rest: List[Set[String]]): List[(String, String)] = {
       /* quit condition*/
@@ -103,17 +140,17 @@ object weekOne {
       val candidates = rest.head // this is set of two-char entry, such as "a-q", "e-f", etc..
       val passFurther = rest.tail
       /* extracting candidates to the list of characters (YES Yet erasing information about "Another" message) */
-//      val candidateString: String = candidates.reduce(_+_)
+      //      val candidateString: String = candidates.reduce(_+_)
 
       /* given a list of incomplete strings, I need to expand it to match exact the number of combinations */
       //f.e. List("a","b") needs to become List ("a", "a,", "b", "b") to match candidates "c-d"
       /* go over them and populate them into expanded result list */
       val populatedResult: Set[(String, String)] = for {
         pairOfChars <- candidates
-        prefix <- result    // must create a string if empty
+        prefix <- result // must create a string if empty
       } yield {
         (prefix._1.concat(pairOfChars.head.toString),
-        prefix._2.concat(pairOfChars.tail.toString))
+          prefix._2.concat(pairOfChars.tail.toString))
         (prefix._2.concat(pairOfChars.head.toString),
           prefix._1.concat(pairOfChars.tail.toString))
       }
@@ -138,6 +175,39 @@ object weekOne {
       case x :: xs => result :+ x.toString
     }
     splitBy2(message.toList, List())
+  }
+
+  def guessKeyChar(messages: List[String], position: Int): Map[List[String], String] = {
+    val keyCharAscii = (0x00 to 0x7f).map(_.toHexString)
+    //    val keyCharSpace: String = keyCharAscii.map(num => dec.normal(num.toHexString)).reduce(_ + _)
+    //    val keyCharSpace = "`[]{}';.,/\"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*()="
+    val firstletters = keyCharAscii.groupBy(hexString => messages.map(
+      message => dec.normal(dec.xor(hexString, message.substring(position * 2 - 2, position * 2))))
+    )
+
+
+    //    val firstletters = keyCharSpace.groupBy(char => messages.map(
+    //      message => dec.normal(dec.xor(dec.hex(char.toString), message.substring(position * 2 - 2, position * 2))))
+    //    )
+
+    def containAlphabet(string: List[String]): Boolean = {
+      string.count(x => !fullAlphabet.contains(x)) < 1
+    }
+
+    val reducedFirstLetters = firstletters.filter(map => containAlphabet(map._1))
+    reducedFirstLetters.mapValues(seq => if (seq.head.length == 2) seq.head else "0" + seq.head)
+  }
+
+  def guessFullKey(messages: List[String]): List[String] = {
+    var key = List[String]()
+
+    def appendIfExists(map: Map[List[String], String]): List[String] = {
+      if (map.size == 0) List("00")
+      else map.values.toList
+    }
+
+    (1 to len).foreach(pos => key = key ++ appendIfExists(guessKeyChar(messages, pos)))
+    key
   }
 
 }

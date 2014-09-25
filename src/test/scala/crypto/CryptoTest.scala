@@ -54,11 +54,11 @@ class CryptoTest {
   @Test
   def myXor() = {
     val dec = new Decrypter
-    assert(dec.myxor("616263646566", "dfd1fd1f") == "6162bcb59879", dec.myxor("616263646566", "dfd1fd1f"))
-    assert(dec.myxor("cd", "a1") == "6c", dec.myxor("cd", "a1"))
-    assert(dec.myxor("aa", "aa") == "00", dec.myxor("aa", "aa"))
-    assert(dec.myxor("a121", "aadd34") == "aa7c15", dec.myxor("a121", "aadd34"))
-    assert(dec.myxor("aadd34", "a121") == "aa7c15", dec.myxor("a121", "aadd34"))
+    assert(dec.xor("616263646566", "dfd1fd1f") == "6162bcb59879", dec.xor("616263646566", "dfd1fd1f"))
+    assert(dec.xor("cd", "a1") == "6c", dec.xor("cd", "a1"))
+    assert(dec.xor("aa", "aa") == "00", dec.xor("aa", "aa"))
+    assert(dec.xor("a121", "aadd34") == "aa7c15", dec.xor("a121", "aadd34"))
+    assert(dec.xor("aadd34", "a121") == "aa7c15", dec.xor("a121", "aadd34"))
   }
 
 }
