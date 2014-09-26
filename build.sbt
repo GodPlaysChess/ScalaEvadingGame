@@ -14,5 +14,9 @@ libraryDependencies += "org.slf4j" % "slf4j-simple" % "1.6.4"
 
 libraryDependencies += "commons-codec" % "commons-codec" % "1.6"
 
+//addCommandAlias("generate-project", "update-classifiers; update-sbt-classifiers; gen-idea sbt-classifiers")
+
+//addCommandAlias("generate-project", ";update-classifiers;gen-idea")
+
 //libraryDependencies += "org.newdawn" % "slick" % "274" from "Slick Repository"
 

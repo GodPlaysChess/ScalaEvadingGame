@@ -68,6 +68,7 @@ object weekOne {
     /* printout(or write to file) all 10-letter words (should be no more than 20^10 combinations */
     //    val listOfPossiblePlainMessages = generateAllPossiblePlainMessage(bundle.map(code => xoredCharsMap(code)))
 
+
     /* proceed to the next 10 letter words. If perfomance is an issue - make smaller increment (6 letters, for instance) */
     //    listOfPossiblePlainMessages.foreach(println(_))                                      //now generating all possible 8-lettered words
     //crap, have already 17K 4lettered words reduced from 531441 words.. I am definitely doing something wrong
